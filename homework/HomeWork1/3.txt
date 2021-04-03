@@ -1,0 +1,249 @@
+PYTHON: Software programming language
+Integration and development
+Sanna
+Scripps Research Institute
+10550 North Torrey Pines Road, La Jolla, CA-92037
+sanner@scripps.edu
+In the past ten years, we have witnessed the rise of technologies such as libraries, object-oriented, software architecture, etc.
+And visual programming. The common goal of these technologies is to achieve software reuse. Even though, many important
+Some progress has been made in the areas of library design, domain analysis, reuse measurement, and reuse organization, but it still exists
+Unresolved issues such as component interoperability and framework design [1]. We have studied the use of interpreted languages ​​to create a programmable dynamic environment in which components can be tied together at a high level. This work has
+It demonstrates the benefits of this method and introduces us to the functions of the interpreted language, which are the key to successful component integration.
+problem
+One of the challenges of biological computing is how to effectively use and interoperate various
+The rapidly evolving calculation methods can simulate, analyze and understand complex characteristics, and
+The interaction of molecular systems. In our laboratory, we have studied many areas, including protein ligands
+Docking, protein-protein docking and complex molecular assembly. Over the years, we have developed
+Calculate the number of tools, such as molecular surfaces, phenomenological potential, various docking and
+Visualization program, we use it in conjunction with programs developed by others. Can be used to calculate molecular properties and/or simulate molecular interactions (e.g. molecular
+Dynamics, conformational analysis, quantum mechanics, distance geometry, docking methods, ab initio methods) are very large and develop rapidly. Moreover, these programs use different input force fields, search techniques, and algorithm details (e.g., continuous space vs. discrete, Cartesian vs.
+Reverse). Each variant has its own advantages and limitations. These procedures
+Also tends to evolve quickly, usually not written as components, which makes them difficult to work
+together.
+"Traditional" solutions
+Generally, researchers have been using tools such as AWK and Shell scripts to make such programs work properly
+together. If this method seems attractive at first, it will have many inherent problems and limitations.
+In the long term. This includes very low interoperability: that is usually data transmission
+The use of files or pipes to interact between programs allows only interoperability at the program level, not at the functional level or at least at the functional level. For example, this makes molecular dynamics code difficult
+Use some third-party electrostatic or molecular surface calculation packages to derive for driving
+Simulate, or use someone’s visualization program tool to control the simulation or monitor or replay the track. Such development usually requires a lot of coding, and often requires access and understanding.
+Source code. This method also requires the creation of a large number of interfaces between different objects.
+tool. This makes it very difficult to integrate new methods into the tool set, thus stifling researchers’
+creativity. This method provides a very low level of code reuse. For example, each program runs
+The molecule will need to implement its own parser for different molecular file formats, and each file format has its own
+Errors and weaknesses, each requires writing code. Finally, this method usually results in very large scripts
+Components that are difficult to maintain, extend, and debug.
+Other solutions: visual programming, dedicated software suite...
+The frustration of development under these conditions prompted us to study better ways to develop code and integrated computing methods. Our first method is based on the use of AVS (Advanced
+Visualization system, from AVS Inc.). In the past ten years, this environment has been very useful to us,
+In terms of code reuse and capturing development done by a group of temporary collaborators, it is usually a postdoctoral researcher who has worked in the laboratory for several years. We also encountered some limitations. AVS is a computing and visualization environment driven by data flow, which contains a large number of
+Processing modules for various operations, such as: data input, image processing, surface and volume rendering, etc. These modules can be linked together graphically using a web editor to create specific visualizations or calculations. It also provides a mechanism to add custom-designed modules for new calculation methods.
+AVS users are roughly divided into three categories
+pyramid. The high-end are module programmers, who usually write C programs and make these codes available as AVS modules. The second category, which is also a larger category of users, is users who use the following methods to generate their own networks:
+Existing modules. Although the network has no constructs for loops or conditional execution, many visualizations can be done at this level without writing a single line of code. The third and largest user category is
+Users who use their data on existing networks. One of the reasons why AVS is effective for us may be that this visual programming paradigm creates this user who is very suitable for intermediate users.
+Scientists who need custom visualizations but don’t want to be programmers. Of course the modularity of AVS
+Naturally promotes code reuse, which leads to rapid prototyping. This allows scientists to focus on
+Visualize the process, not the program used to visualize data.
+However, molecular modeling and visualization of biomolecules have brought many challenging problems to the data flow environment. Molecules have a high level of internal organization and usually need to replicate the programs that run on them. This is not always compatible with the usual simple data types.
+Available in these environments. There are also problems with data replication and communication between modules.
+However, we believe that the biggest limiting factor in AVS is the lack of scripting capabilities. AVS
+The Command Language Interface (CLI) consists of only a set of commands, in addition, it only exposes one
+The subset of kernel functions creates some serious limitations. We have solved some of these problems
+By embedding the Python interpreter in the AVS module, the script function is increased [1].
+Commercial and academic molecular modeling software packages address these issues more specifically than the following methods
+However, most of the software packages in AVS are monolithic programs and only provide a limited set of options
+Change the visualization style or extension to accept new types of data or perform new calculations. Since one of our tasks is to study new calculation methods and visualizations, they have no
+It seems to be the right tool.
+Language-centric approach and explanatory language
+Programs are usually developed in a "self-centered" way, which means they are rewritten as independent units
+Designed to solve specific problems in accomplishing specific tasks. Certain programs, such as AVS, are designed to expand
+By adding new modules that can encapsulate new calculation methods, but this is always necessary
+Within the framework of the plan. And because the program is specialized in nature, it is bound to cause problems. To solve this problem, we decided to try a "language-centric" approach. We use high-level languages ​​as the core of the framework. Now, we no longer use programming to extend the language, but through
+A module or component that implements a specific function. High-level language acts as "glue"
+Modules and components work together to quickly create specialized applications. In a sense, language
+Become a "scripting framework" that allows rapid prototyping of new applications. Developing extension modules for the language corresponds to postponing the specialization of the code as much as possible.
+We believe that an interpreted language will provide the required flexibility, interactivity and scalability
+For this method, we began to explore the use of the three most popular interpreted languages: Perl, TCL
+And Python. There are many articles comparing these three languages ​​and combined languages ​​such as C, C++ and Java [For a list of arti, see http://www.python.org/doc/Comparisons.html. cles]. After experimenting with these different languages, we learned that "all interpreted languages ​​are
+Can’t create equality", each has its own specific advantages and disadvantages. Of course, they all provide scriptable scripts
+The framework is interactive, flexible, extensible, and embeddable, but there are differences in styles and concepts, which make one or more tasks more attractive for a given task.
+Perl has the largest user base and is very suitable for surprisingly short scripts that perform a lot of work.
+Unfortunately, it is also difficult to understand. The language provides good support for common problems
+Application-oriented tasks, and Python’s elegant and not too vague syntax emphasizes support for the following
+General programming method, and improve the readability of the code, thereby improving maintainability. Tcl, just like Python
+It can be used as an extension language or as an independent programming language, but its support for data structures is quite weak (traditionally everything is a string). Moreover, there was a lack of modular namespace before
+Version 8.0 hinders the development of large programs. All these languages ​​span multiple platforms and often
+Provides more platform independence than Java. They can all be extended with C or C++.
+We chose Python for many reasons, including: concise and almost similar to pseudo-code syntax;
+Its modularity; its object-oriented design; its summary analysis, debugging, reflection, introspection and self-recording functions; and the availability of digital extensions, which can be stored and manipulated effectively
+A lot of numerical data. Python, like any other interpreted language, is a good glue, but other than that
+Can be used to develop a large number of extension components.
+Python
+Python is an interpreted, interactive, object-oriented programming language. It provides high-level data structures, such as lists and associative arrays (called dictionaries), dynamic typing and dynamic binding, modules, classes, exceptions, automatic memory management, etc. It has a very simple and elegant syntax and
+It is a powerful and versatile programming language. It was designed by Guido van Rossum in 1990.
+Like many other scripting languages, it is free, even for commercial purposes, and can actually run on it
+Any modern computer. The interpreter automatically compiles the python program into platform-independent byte code, and then interprets the code. We are running an unmodified component written in Python,
+Linux, Windows NT, 98, 95, IRIX, SunOS, OSF.
+Python is modular in nature. The kernel is very small and can be extended by importing extension modules. The Python distribution includes various standard extension libraries (some are written in Python, some are written in Python
+(In C or C++), the operation ranges from string manipulation and Perl-like regular expressions to graphical
+User interface (GUI) generator, including web-related utilities, operating system services, debugging and
+You can create new extension modules to extend the language using new or old code. we
+These extended functions are described below. There are many expansion modules with
+Developed and distributed by members of the Python user community. These expansion modules,
+Sometimes called a "package", or a component including GADFLY, GADFLY is an SQL database manager written in the following languages:
+Python; PIL, Python image library; FNORB and OmniBorker, CORBA-compatible Object Request Broker (ORB) written in Python; Gendoc, an automatic documentation tool; and digital Python, to name just one
+Rarely.
+The best Python resource and books available may be the Python website
+(Http://www.python.org). It provides access to code, documentation, software packages, articles, mailing lists, etc.
+It’s also worth mentioning the latest creation of the biopython.org website, which is a
+Computational biology and chemistry are very similar to bioperl.
+Finally, it is worth mentioning that in addition to the C implementation of the Python interpreter, there is also a
+A 100% pure Java implementation, called JPython, allows Python to be used as an interpreted language for programming in the Java world. The interpreter allows instantiation of Java classes, and Java code can call Python
+Code. Native extensions first need to be available in the Java world before they can be used in Java
+JPython.
+Python numerical expansion
+Numeric Python is an expansion module for efficient storage and parallel processing of digital data.
+Using this module, you can efficiently (basically as fast as in C) perform many simple operations that are too slow in Python without having to implement code in C. This module often allows us to
+Use Python (using numbers) to write extensions that are effective enough for our purposes and do not require
+Recode in C or C++.
+For example, if the coordinates of the N atoms that make up a molecule are stored in a matrix of Nx3 floating-point values ​​called "coordinates", it is similar to the operation shown in the following Python code
+Syntactically becomes trivial and efficient, as if they were programmed in C or C++:
+-Use 3-vector T to translate the molecule. This illustrates data parallel operations, with the addition of 3-vector
+To each 3 vector in the coordinates
+>>>Coordinates = Coordinates + T
+-Calculate the center of gravity of the molecule. First summarize all values, then collapse the first one of the array
+The size is then divided by the number of atoms.
+>>>Import numbers
+>>> g = Numeric.sum (coordinates) / len (coordinates)
+-Calculate the distance of all atoms to a given 3D point P
+>>> d = coordinate-P
+>>>#Now sum and square root on the second dimension
+>>> d = Numeric.sqrt(Numeric.sum(d * d, 1))
+Performance issues
+When using interpreted languages, you usually worry about the cost of performance. We learned that, first of all, we have a wrong understanding of the required performance, location and time. In addition, Python code runs with reasonable performance, enough to perform many common tasks.
+Finally, even with large digital extensions, good performance can be maintained
+Numeric array. I want to give an example to illustrate these points. This is our first PDB parser for Python.
+The reason why asaCextension was developed is because we think that the Python code is not efficient enough. C
+The extension we wrote to read PDB files ended up being very complicated and difficult to maintain, and
+extend. Therefore, we decided to develop a Python version that is very close to the C version in terms of parsing PDB files, tree structure and computing connectivity. Also a lot
+Smaller, simpler, easy to maintain and platform independent. We feel that a small performance loss is still good
+It is worth what we have gained in terms of flexibility and portability. Since then, we have been in Python and
+Then profile them, and then determine which parts really need to be reimplemented in C or C++.
+Python as an integrated tool
+As mentioned earlier, one of the main characteristics of all modern interpreted languages ​​is their extensibility.
+Want to briefly review the different ways our Python-based scripting framework can be integrated
+Old code and extended with new features. Basically, there are three ways to add new features to it
+This scripting framework: By implementing in Python, "wrap" existing code or create an interface for existing code with certain communication functions.
+-Implement functions in Python:
+This is the method of choice for all the new developments we carry out. Indeed, for code that does not yet exist
+Written as an advanced feature of Python, and already available extensions usually make it easier
+Than implemented in Python in C or C++. Even if some code already exists, there are many situations
+We decided to reimplement it in Python. This happens when the recoding requirements in Python are relatively small
+The large amount of code (which is normal) and the performance expectations of the Python code are acceptable.
+This approach provides the main advantage of platform independence.
+-Wrap existing C, C++ and Fortran code:
+In many cases, it doesn't make sense to reimplement some old code in Python. but
+Hope to be able to access this code from Python. This requires "wrapping" Python's old code. let us
+Consider the following simple example: we have a function "foo" that takes integers as parameters, and
+Returns a floating point number. In the Python world, integers and floating point numbers are objects. To be able to call function foo
+From Python, we must use C language to write a function that will: take Python objects as parameters; extract integers
+The value of the object; call the function foo for the integer value; package the returned float into Python
+An object representing a floating-point number; finally the object is returned to the interpreter. This code is called a "wrapper"
+Code". Once we have the wrapper code, we can compile it with the function foo and create a shared
+Object (dll in the Windows world), which can then be imported into the Python interpreter. Of course, this extension now depends on the platform. Using SWIG, this process of packaging code can be automated to a certain extent,
+Simple wrapper interface generator (http://www.swig.org). SWIG can generate wrapper code for several
+Interpreted languages, such as TCL, Perl, Guile, and of course Python. Recently added support for Java,
+and also.
+This method is very useful for extending Python with the application programming interface (API) of existing software. Once someone wraps up such an API, you can provide it to the community and
+The number of such expansions is large and growing. (Oracle, mySQL, OpenGL, DCOM, etc.).
+-Interface code:
+For certain communication functions (such as through sockets or
+Standard support provided by standard communication protocols (HTTP, NNTP, SMTP, etc.)
+Python modules that use these protocols are usually easy to write clients in Python.
+Finally, the Python interpreter can be embedded in the application as an extension language. We have
+Describe this method of AVS [2]. In addition to the program where script functions are added,
+The Python interpreter is embedded, which also allows all tools ported to Python to be used in the tool immediately
+program.
+Python extension we developed
+In the past two years, we have developed many Python modules or components to handle
+Many aspects of our daily work. Using SWIG, we packaged code that handles the following tasks:
+Surface calculation; molecular mechanics and dynamics; electrostatic calculation; protein-protein docking;
+Protein-ligand docking; in addition to these "traditional" calculation methods, we have also packaged many less conventional molecular modeling tools, such as convex hull calculation tools; and so on. Fast collision
+Detection polygon model library; several mesh extraction algorithms, general extrusion library,
+These modules are platform dependent, and we mainly use them on SGI and Sun computers. we
+Two platform-independent software packages have also been developed using Python: DejaVu / DejaVuFramework (this is a general 3D geometric visualization package) and BioChem, which provides support for operation and visualization
+molecular.
+DejaVu is a software package written in Python for visualizing 3D geometry using the OpenGL library. It provides a set of classes that describe objects, such as viewers, cameras, lights, clipping planes, color editors, trackballs, geometric shapes, etc. The Viewer class is a full-featured visualization application that provides control over controls.
+The number of rendering parameters, such as depth cue, global anti-aliasing, rendering mode (point, line,
+Polygon), shadow mode (plane, gouraud), multiple light sources, arbitrary clipping planes, etc.
+Viewer maintains a hierarchical structure of objects, in which rendering properties can be inherited. DejaVu also provides
+The number of standard geometries, including lines, index lines, index polygons, triangles and quadrilateral bars,
+Sphere, cylinder, label. This list can be extended by subclassing the geometry base class. DejaVu did it
+The process of adding visualization capabilities to any object developed using Python is very simple
+DejaVuFramework is a "sub-package" of DejaVu, which provides support for building visualization applications in Windows. it
+It has been designed to be specialized and extended in a modular manner.
+The BioChem software package provides some classes that can read molecules in a variety of file formats and build tree structures
+Reproduce the layered structure of the internal structure of the molecule. For example, use the following four levels to represent protein molecules: molecule, chain, residue, and atom. The number of levels can be modified.
+For example, we added an energy level between the chain and the residue to indicate
+protein. All nodes in the tree structure can be dynamically expanded, which is
+An instance of the atom "A", just assign the value to the member data of the atom: A.radius = 1.7.
+This structure that allows any node to be dynamically expanded and performs various selections has been proven
+It is very powerful and provides a high-level interface for the molecule. The following code instantiates the protein
+Object and construct its representation from the PDB file. Several options and operations illustrate some
+The basic functions of these classes:
+>>>Imported protein from BioChem.protein
+>>>Import PdbParser from BioChem.pdbParser
+>>> protein = Protein()###Create a protein object
+>>> ###Read the file using the given parser object
+>>> protein.read('1crn.pdb', PdbParser())
+>>>
+>>> ###Once the protein is loaded, we can operate on the structure
+>>> ### TreeNodeSets behave like Python arrays
+>>>Residue 8Trhough15 = protein. Chain[0]. Residue [8:16]
+>>> allAtoms = protein, chain, residue, atom
+>>>Print residue 8
+<ResidueSet instance> contains 8 residues
+>>>
+>>> ###Select all atoms with their names in the list:
+>>> bbnames = ['N','CA','C','O']
+>>> backBone = allAtoms.get(lambda x, names = bbnames: x.name in name)
+>>>
+>>> ###Perform Boolean operations on the collection:
+>>> sideChains = allAtoms-backBone
+>>>
+>>> ###Quickly add new members to any object or set of objects:
+>>> ###Here, we add a member named "bb" to all atoms and set it to 1
+>>> ###represents the main chain atom, 0 represents the side chain atom
+>>> allAtoms.bb = 0
+>>> backBone.bb = 1
+>>>
+>>> ###Use atomic distance to establish a bond
+>>> protein.buildBondsByDistance()
+-Molecule Viewing App
+Based on the BioChem and DejaVu software packages, we developed a molecular viewer [Figure 1].
+The viewer has most of the functions normally expected in a molecule viewer: stick and cpk representation; different coloring schemes (by atom, by residue type, by chain, by molecule, by property); measurement tool;
+Atom identification through sorting; support for a variety of molecules; secondary structure representation; user-defined collections of atoms, residues, chains and molecules. In addition to these traditional functions, it is dynamic
+Extensible, that is, you can independently develop new commands and place them in the library. Viewer inheritance
+These commands can be dynamically imported from DejaVuFramework as needed. In fact, all commands in the viewer are developed based on this principle. This provides a way to add functionality to the function
+Incremental applications, very suitable for team development. In addition, this method avoids the "function overload" problem, that is, the menu is overloaded, and the messy commands have nothing to do with the problem at hand. Custom files, among other things, can also specify which commands should be loaded when loading
+The application starts.
+This allows many molecular viewing applications to be defined only by creating different custom files, each loaded with a different set of commands. We have written a surface calculation
+Command and selectively display the surface fragments corresponding to the sub-atom set. Actually in
+All the geometry of this viewer is related to the base molecule, so a subset of atoms can be used for: partial display/non-display; selective marking; local coloring using different schemes; any geometric attempts. Vice versa, mapping of picking done on any geometric shape (molecule, surface, secondary structure)
+Back to the molecule. The application also provides a Python Shell. The typein widget that Python knows is
+The standard input and standard output of the python interpreter running the application. From python
+Shell, you can call any command interactively, and you can write scripts that run on the application. The command logs itself into the file when it is executed. The file can be saved, edited and played to
+Resume the previous session. This application can run unmodified on any platform without a Python interpreter
+It has the following extensions: digital, Tkinter/Togl and OpenGL.
+Perhaps the most interesting feature of this app is that the creation of the app is actually in
+Write down commands and make it easy to write commands through the built-in support provided
+DejaVuFramework.
+in conclusion
+We firmly believe that this "language-centric" or scripting framework approach has many advantages, and
+benefit. We have already witnessed: a significant increase in productivity and a high level of code
+Reuse. Of course, this method is not specific to Python and can be copied in any interpreted language or even a compiled language. But the fact is that nothing else happened
+The language we used before. For us, the most important change is the shift from writing programs or scripts to writing modules or components. This concept is well known to the component-based software development community, but resources are limited in the molecular model research environment
+Python has played an important role in the design and implementation of software tools. It has placed these
+Advanced software development technology within our capacity.
+reference
