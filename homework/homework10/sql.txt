@@ -1,0 +1,22 @@
+1.''select studentinfo.name,studentinfo.age,classinfo.classname from studentinfo
+left join classinfo
+on studentinfo.classID = classinfo.classID''
+
+2."select name,sex,age from studentinfo where ID<4"
+
+3. "select * from studentinfo where REGEXP_LIKE(name,'[黄]{1}.$')"
+
+4."select * from studentinfo where ID=1||ID=3||ID=8"
+
+5."select * from studentinfo where ID>=3&&ID<=8"
+
+6."select * from studentinfo where sex='男' order by age desc"
+
+7."select count(*) from studentinfo where sex='女'"
+
+8."select avg(age) from studentinfo"
+
+9."select avg(age) from studentinfo where sex='男'"
+"select avg(age) from studentinfo where sex='女'"
+
+10." select sex,group_concat(name) from studentinfo group by sex"
