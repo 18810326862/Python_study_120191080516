@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/button_action.js"></script>
+    <style>
+        .all {
+            width: 800px;
+            height: 450px;
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -225px 0 0 -400px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="all">
+    <div>
+        <h1 style="align-content: center">AngularJS TodoList</h1>
+    </div>
+    <div>
+        <form name="form1" method="post" action="/search" id="form1">
+		<span>
+            <span>search</span>
+		    <input type="text" name="search" onkeyup="goonclick()"  value="{{ text }}"  >
+{#            onfocus="setFocus(this)#}
+		    <input type="button" value="go" onclick="goonclick()">
+		</span>
+        </form>
+    </div>
+
+    <div>
+        <form name="form2" method="post" action="/update" id="form2">
+            <table>
+                <tr>
+                    <th>#</th>
+                    <th>title</th>
+                    <th>control</th>
+                </tr>
+
+                <!--<tr>
+                    <td>123</td>
+                    <td>456</td>
+                    <td><span><input type="button" name="123">
+                        <input type="button" name="456">
+                    </span></td>
+                </tr>-->
+                {% for data in notes %}
+                    <tr>
+                        {% if data['isdone']=='yes' %}
+
+
+                            <th>{{ data['id'] }}</th>
+                            <th style="text-decoration: line-through" name="th{{ data['id'] }}">
+                                <input type="text" value="{{ data['title'] }}" name="title{{ data['id'] }}"
+                                       readonly="readonly"  style="text-decoration: line-through"></th>
+                            <th><span>
+
+                        <input type="button" name="done{{ data['id'] }}" value="Undo"
+                               onclick="doonclick(this,{{ data['id'] }})">
+                        <input type="button" name="edit{{ data['id'] }}" value="Edit"
+                               onclick="editonclick(this,{{ data['id'] }})">
+                        <input type="button" value="Remove" name="remove{{ data['id'] }}"
+                               onclick="removeonclick(this,{{ data['id'] }})">
+                    </span></th>
+
+
+                        {% else %}
+                            <th>{{ data['id'] }}</th>
+                            <th name="th{{ data['id'] }}">
+                                <input type="text" value="{{ data['title'] }}  " name="title{{ data['id'] }}"
+                                       readonly="readonly"></th>
+                            <th><span>
+
+                        <input type="button" name="done{{ data['id'] }}" value="Done"
+                               onclick="doonclick(this,{{ data['id'] }})">
+                        <input type="button" name="edit{{ data['id'] }}" value="Edit"
+                               onclick="editonclick(this,{{ data['id'] }})">
+                        <input type="button" value="Remove" name="remove{{ data['id'] }}"
+                               onclick="removeonclick(this,{{ data['id'] }})">
+                    </span></th>
+                            </tr>
+                        {% endif %}
+
+
+                {% endfor %}
+
+            </table>
+        </form>
+    </div>
+
+
+    <div>
+        <form name="form3" method="post" action="/add">
+    <span>
+        <input type="text" name="title">
+        <input type="submit" value="Add New Item">
+    </span>
+
+        </form>
+        <form action="/all">
+            <input type="submit" value="show all">
+        </form>
+    </div>
+</div>
+</body>
+</html>
